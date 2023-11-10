@@ -5,51 +5,37 @@ import {
   CardContent,
   Typography,
   CardMedia,
-  CardActions,
-  IconButton,
   Grid,
+  IconButton,
+  CardActions,
   Button,
 } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import Rating from "@mui/material/Rating";
-import { getData, saveData } from "../services/database"; // Ensure this path is correct
+import Rating from "@mui/material/Rating"; // Make sure to import Rating
+import { getData, saveData } from "../services/database"; // Import saveData as well
 
-const CafeCardList = () => {
-  const [cafes, setCafes] = useState([]); // Corrected 'cosnt' to 'const'
-  const [favorites, setFavorites] = useState(getData('favorites') || []);
+const FavoriteScreen = () => {
+  const [favorites, setFavorites] = useState([]);
 
   useEffect(() => {
-    // Try to get cafes data from localStorage first
-    const storedCafes = getData("cafes");
-    if (storedCafes) {
-      setCafes(storedCafes);
-    } else {
-      // If not found, load from cafes.json and store it in localStorage
-      import("../cafes.json")
-        .then((data) => {
-          setCafes(data.default);
-          //saveData("cafes", JSON.stringify(data.default));
-        })
-        .catch((error) => {
-          console.error("Failed to load cafe data:", error);
-        });
+    // Fetch the favorite cafes data from localStorage on component mount
+    const storedFavorites = getData("favorites");
+    if (storedFavorites) {
+      setFavorites(storedFavorites);
     }
   }, []);
 
+  // Handle click to toggle favorite status
   const handleFavoriteClick = (cafe) => {
-    let updatedFavorites;
-    if (favorites.some(favorite => favorite.name === cafe.name)) {
-      // If it's already a favorite, remove it
-      updatedFavorites = favorites.filter(favorite => favorite.name !== cafe.name);
-    } else {
-      // If it's not a favorite, add it
-      updatedFavorites = [...favorites, cafe];
-    }
-    // Update the favorites in localStorage and state
-    saveData('favorites', JSON.stringify(updatedFavorites));
+    const updatedFavorites = favorites.some(
+      (favorite) => favorite.name === cafe.name
+    )
+      ? favorites.filter((favorite) => favorite.name !== cafe.name)
+      : [...favorites, cafe];
+
+    saveData("favorites", JSON.stringify(updatedFavorites));
     setFavorites(updatedFavorites);
   };
-
   // The rest of the component (JSX)
   return (
     <Box
@@ -58,7 +44,7 @@ const CafeCardList = () => {
       alignItems="center"
       sx={{ my: 4 }}
     >
-      {cafes.map((cafe, index) => (
+      {favorites.map((cafe, index) => (
         <Card key={index} sx={{ width: "100%", maxWidth: 345, mb: 2 }}>
           <Grid container>
             <Grid
@@ -110,12 +96,16 @@ const CafeCardList = () => {
                   Get Direction
                 </Button>
                 <IconButton
-                aria-label="add to favorites"
-                onClick={() => handleFavoriteClick(cafe)}
-                color={favorites.some(favorite => favorite.name === cafe.name) ? 'error' : 'default'}
-              >
-                <FavoriteIcon />
-              </IconButton>
+                  aria-label="add to favorites"
+                  onClick={() => handleFavoriteClick(cafe)}
+                  color={
+                    favorites.some((favorite) => favorite.name === cafe.name)
+                      ? "error"
+                      : "default"
+                  }
+                >
+                  <FavoriteIcon />
+                </IconButton>
               </CardActions>
             </Grid>
             <Grid
@@ -141,4 +131,4 @@ const CafeCardList = () => {
   );
 };
 
-export default CafeCardList;
+export default FavoriteScreen;

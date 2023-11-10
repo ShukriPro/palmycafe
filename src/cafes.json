@@ -1,0 +1,80 @@
+[
+    {
+      "name": "Wildbean Cafe",
+      "rating": 3.5,
+      "reviewCount": 20,
+      "address": "339 Rangitikei St",
+      "imageUrl": "/logo192.png"
+    },
+    {
+      "name": "The Espresso Bar",
+      "rating": 4.0,
+      "reviewCount": 35,
+      "address": "24 Main St",
+      "imageUrl": "/espresso-bar.jpg"
+    },
+    {
+      "name": "Daily Grind",
+      "rating": 4.5,
+      "reviewCount": 10,
+      "address": "100 Coffee Lane",
+      "imageUrl": "/daily-grind.jpg"
+    },
+    {
+      "name": "Bean There Cafe",
+      "rating": 3.0,
+      "reviewCount": 15,
+      "address": "55 Bean St",
+      "imageUrl": "/bean-there.jpg"
+    },
+    {
+      "name": "Cafe Mocha",
+      "rating": 5.0,
+      "reviewCount": 50,
+      "address": "789 Latte Blvd",
+      "imageUrl": "/cafe-mocha.jpg"
+    },
+    {
+      "name": "Cappuccino Corner",
+      "rating": 4.3,
+      "reviewCount": 22,
+      "address": "321 Brew Ave",
+      "imageUrl": "/cappuccino-corner.jpg"
+    },
+    {
+      "name": "Roasters Hub",
+      "rating": 3.8,
+      "reviewCount": 18,
+      "address": "27 Grind St",
+      "imageUrl": "/roasters-hub.jpg"
+    },
+    {
+      "name": "Java Junction",
+      "rating": 4.1,
+      "reviewCount": 30,
+      "address": "88 Sip St",
+      "imageUrl": "/java-junction.jpg"
+    },
+    {
+      "name": "Aroma Bistro",
+      "rating": 2.8,
+      "reviewCount": 8,
+      "address": "452 Aroma St",
+      "imageUrl": "/aroma-bistro.jpg"
+    },
+    {
+      "name": "Brewed Awakening",
+      "rating": 3.9,
+      "reviewCount": 40,
+      "address": "360 Espresso Rd",
+      "imageUrl": "/brewed-awakening.jpg"
+    },
+    {
+      "name": "Caffeine Dreams",
+      "rating": 3.7,
+      "reviewCount": 25,
+      "address": "1010 Decaf Dr",
+      "imageUrl": "/caffeine-dreams.jpg"
+    }
+  ]
+  
