@@ -1,29 +1,19 @@
-import logo from "./logo.svg";
-import "./App.css";
-import CafeCard from "./screens/CafeCard";
-import FavoriteScreen from "./screens/FavoriteScreen";
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+// In App.js
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import BottomNavBar from './components/BottomNavBar';
+import HomeScreen from './screens/HomeScreen';
+import FavoriteScreen from './screens/FavoriteScreen';
+
 function App() {
   return (
     <Router>
-      <div>
-        <nav
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            marginTop: "1em",
-          }}
-        >
-          <Link to="/">Home</Link>
-          {" / "}
-          <Link to="/favorite">Favorite</Link>
-        </nav>
-        <Routes>
-          <Route path="/" element={<CafeCard />} />
-          <Route path="/favorite" element={<FavoriteScreen />} />
-        </Routes>
-      </div>
+      <Routes>
+        <Route path="/palmycafe" element={<HomeScreen />} />
+        <Route path="/favorite" element={<FavoriteScreen />} />
+        {/* Other routes... */}
+      </Routes>
+      <BottomNavBar />
     </Router>
   );
 }

@@ -18,32 +18,53 @@ const FavoriteScreen = () => {
   const [favorites, setFavorites] = useState([]);
 
   useEffect(() => {
-    // Fetch the favorite cafes data from localStorage on component mount
     const storedFavorites = getData("favorites");
     if (storedFavorites) {
-      setFavorites(storedFavorites);
+      try {
+        // Parse the stored string as JSON and set it to favorites
+        const parsedFavorites = JSON.parse(storedFavorites);
+        if (Array.isArray(parsedFavorites)) {
+          setFavorites(parsedFavorites);
+        } else {
+          // If parsed data is not an array, set an empty array
+          setFavorites([]);
+        }
+      } catch (error) {
+        // If parsing fails, also set an empty array
+        setFavorites([]);
+      }
+    } else {
+      // If no data in storage, set an empty array
+      setFavorites([]);
     }
   }, []);
+  
 
   // Handle click to toggle favorite status
   const handleFavoriteClick = (cafe) => {
-    const updatedFavorites = favorites.some(
-      (favorite) => favorite.name === cafe.name
-    )
-      ? favorites.filter((favorite) => favorite.name !== cafe.name)
-      : [...favorites, cafe];
-
-    saveData("favorites", JSON.stringify(updatedFavorites));
-    setFavorites(updatedFavorites);
+    setFavorites((prevFavorites) => {
+      // Ensure prevFavorites is an array
+      const validPrevFavorites = Array.isArray(prevFavorites) ? prevFavorites : [];
+  
+      const updatedFavorites = validPrevFavorites.some(favorite => favorite.name === cafe.name)
+        ? validPrevFavorites.filter(favorite => favorite.name !== cafe.name)
+        : [...validPrevFavorites, cafe];
+  
+      saveData("favorites", JSON.stringify(updatedFavorites));
+      return updatedFavorites;
+    });
   };
+  
   // The rest of the component (JSX)
   return (
+    
     <Box
       display="flex"
       flexDirection="column"
       alignItems="center"
       sx={{ my: 4 }}
     >
+      <div>Favorites</div>
       {favorites.map((cafe, index) => (
         <Card key={index} sx={{ width: "100%", maxWidth: 345, mb: 2 }}>
           <Grid container>
