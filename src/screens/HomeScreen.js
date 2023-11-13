@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Box, Button } from "@mui/material";
 import CafeCard from "../components/CafeCard";
-import { getData, saveData } from "../services/database";
+import { getData, saveData } from "../services/localStorage";
 import { db } from "../services/firebaseConfig";
 import { collection, onSnapshot } from "firebase/firestore";
 import SearchBar from "../components/SearchBar";
+
 const HomeScreen = () => {
-  
-  //states
   const [searchQuery, setSearchQuery] = useState("");
   const [cafes, setCafes] = useState([]);
   const [displayCount, setDisplayCount] = useState(10);
@@ -16,27 +15,10 @@ const HomeScreen = () => {
     return storedFavorites ? JSON.parse(storedFavorites) : [];
   });
 
-  //Function to upade the search query
-  const handleSearch = (query) => {
-    setSearchQuery(query.toLowerCase());
-    setDisplayCount(10);
-  };
+  // ... states ...
 
-  // Filter cafes based on the search query
-  const filteredCafes = cafes.filter((cafe) => {
-    return (
-      cafe.name.toLowerCase().includes(searchQuery) ||
-      cafe.rating.toString().includes(searchQuery) ||
-      // Add other conditions if needed
-      cafe.address.toLowerCase().includes(searchQuery)
-    );
-  });
-  console.log(filteredCafes);
-  // fetch data from firebase
   useEffect(() => {
-    // Reference to the collection
     const cafesCollectionRef = collection(db, "Cafes");
-    // Listen for real-time updates
     const unsubscribe = onSnapshot(
       cafesCollectionRef,
       (snapshot) => {
@@ -44,36 +26,66 @@ const HomeScreen = () => {
           id: doc.id,
           ...doc.data(),
         }));
+        console.log("Fetched Cafes:", fetchedCafes); // Diagnostic log
         setCafes(fetchedCafes);
       },
       (error) => {
         console.error("Failed to load cafe data:", error);
       }
     );
-
-    // Clean up the listener on unmount
     return () => unsubscribe();
   }, []);
 
+  // ... other functions ...
+  // ... other functions ...
+
+  const filteredBeforeDedup = cafes.filter((cafe) => {
+    return (
+      cafe.name.toLowerCase().includes(searchQuery) ||
+      cafe.rating.toString().includes(searchQuery) ||
+      cafe.address.toLowerCase().includes(searchQuery)
+    );
+  });
+
+
+  const deduplicateCafes = (cafes) => {
+    const uniqueCafes = new Map();
+    cafes.forEach(cafe => {
+      // Create a unique key based on name and address
+      const uniqueKey = `${cafe.name}-${cafe.address}`;
+      if (!uniqueCafes.has(uniqueKey)) {
+        uniqueCafes.set(uniqueKey, cafe);
+      }
+    });
+    return Array.from(uniqueCafes.values());
+  };
+  
+  const filteredCafes = deduplicateCafes(filteredBeforeDedup);
+
+
+
+
+
+
+  const handleSearch = (query) => {
+    setSearchQuery(query.toLowerCase());
+    setDisplayCount(10);
+  };
+
   const handleFavoriteClick = (cafe) => {
     setFavorites((prevFavorites) => {
-      const isFavorite = prevFavorites.some(
-        (favorite) => favorite.id === cafe.id
-      );
+      const isFavorite = prevFavorites.some((favorite) => favorite.id === cafe.id);
       const updatedFavorites = isFavorite
         ? prevFavorites.filter((favorite) => favorite.id !== cafe.id)
         : [...prevFavorites, cafe];
 
-      // Perform the localStorage update after the state update for performance reasons
-      // and to ensure we don't serialize the data if there's no change.
       saveData("favorites", JSON.stringify(updatedFavorites));
-
       return updatedFavorites;
     });
   };
 
   const loadMore = () => {
-    setDisplayCount((prevCount) => prevCount + 10);
+    setDisplayCount((prevCount) => prevCount + 100);
   };
 
   return (
@@ -99,7 +111,6 @@ const HomeScreen = () => {
       )}
     </Box>
   );
-
 };
 
 export default HomeScreen;
