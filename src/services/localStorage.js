@@ -1,7 +1,15 @@
 // localStorage.js
+// const saveData = (key, value) => {
+//     try {
+//         localStorage.setItem(key, value);
+//     } catch (error) {
+//         console.error(`Error saving data to localStorage for key ${key}:`, error);
+//     }
+// };
+
 const saveData = (key, value) => {
     try {
-        localStorage.setItem(key, value);
+        localStorage.setItem(key, JSON.stringify(value));
     } catch (error) {
         console.error(`Error saving data to localStorage for key ${key}:`, error);
     }
